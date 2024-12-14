@@ -1,7 +1,7 @@
 import { clerkMiddleware, createRouteMatcher } from "@clerk/nextjs/server";
 
 const protectedRoute = createRouteMatcher([
-  // "/",
+  "/",
   "/upcoming",
   "/inviting",
   "/previous",
@@ -11,7 +11,7 @@ const protectedRoute = createRouteMatcher([
 
 export default clerkMiddleware((auth, req) => {
   if (protectedRoute(req)) {
-    const url = new URL(req.url, `http://${req.headers.host}`);
+    const url = req.nextUrl;
     const username = url.searchParams.get("username");
     const email = url.searchParams.get("email");
 
