@@ -16,8 +16,8 @@ export const metadata: Metadata = {
 
 export default async function RootLayout({children} : {children : React.ReactNode}) {
 
-  const request = await fetch(`https://test-upm.vercel.app/api/isAllowed`)
-  const data = await request.json()
+  // const request = await fetch(`https://test-upm.vercel.app/api/isAllowed`)
+  // const data = await request.json()
 
  
   return (
@@ -38,12 +38,12 @@ export default async function RootLayout({children} : {children : React.ReactNod
     }>   
       <html lang="en" dir="rtl">
           <body className={`bg-dark-2 relative text-white`}>
-            {request.status == 403 && 
+            {/* {request.status == 403 &&  */}
               <div className="flex justify-center h-screen items-center">
                 <p className="text-3xl">شما به این صفحه دسترسی ندارید!</p> 
               </div>
-            }
-            {request.status != 403 && children}
+            {/* }
+            {request.status != 403 && children} */}
           </body>
       </html>
     </ClerkProvider>
