@@ -16,7 +16,7 @@ export const metadata: Metadata = {
 
 export default async function RootLayout({children} : {children : React.ReactNode}) {
 
-  const request = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/isAllowed`)
+  const request = await fetch(`https://test-upm.vercel.app/api/isAllowed`)
   const data = await request.json()
 
  
