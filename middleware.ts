@@ -9,7 +9,7 @@ const protectedRoute = createRouteMatcher([
   "/meeting(.*)",
 ]);
 
-export default clerkMiddleware((auth, req) => {gi
+export default clerkMiddleware((auth, req) => {
   if (protectedRoute(req)) {
     const url = req.nextUrl;
     const username = url.searchParams.get("username");

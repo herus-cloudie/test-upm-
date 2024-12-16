@@ -1,5 +1,5 @@
 
-const ALLOWED_REFERER = 'https://example.com/specific-uri';
+const ALLOWED_REFERER = 'https://upm.cns365.ir/';
 
 export async function GET(request) {
   const referer = request.headers.get('referer');
