@@ -1,7 +1,7 @@
 import { clerkMiddleware, createRouteMatcher } from "@clerk/nextjs/server";
 import { NextResponse } from "next/server";
 
-const allowedDomain = "https://upm.cns365.ir"; 
+const allowedDomain = "https://upm.cns365.ir";
 
 const protectedRoute = createRouteMatcher([
   "/",
@@ -19,8 +19,12 @@ export default clerkMiddleware((auth, req) => {
   const referer = requestHeaders.get("referer");
   const origin = requestHeaders.get("origin");
 
+  const isServerSideRequest = !requestHeaders.get("x-nextjs-data");
+
   const isAllowedDomain =
-    referer?.startsWith(allowedDomain) || origin === allowedDomain;
+    referer?.startsWith(allowedDomain) ||
+    origin === allowedDomain ||
+    (isServerSideRequest && url.origin === allowedDomain);
 
   if (!isAllowedDomain) {
     console.error(`Request blocked. Unauthorized domain: ${referer || origin}`);
@@ -43,7 +47,7 @@ export default clerkMiddleware((auth, req) => {
     auth().protect();
   }
 
-  return NextResponse.next(); 
+  return NextResponse.next();
 });
 
 export const config = {
