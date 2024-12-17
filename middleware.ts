@@ -1,4 +1,7 @@
 import { clerkMiddleware, createRouteMatcher } from "@clerk/nextjs/server";
+import { NextResponse } from "next/server";
+
+const allowedDomain = "https://upm.cns365.ir"; 
 
 const protectedRoute = createRouteMatcher([
   "/",
@@ -10,8 +13,24 @@ const protectedRoute = createRouteMatcher([
 ]);
 
 export default clerkMiddleware((auth, req) => {
+  const url = req.nextUrl;
+  const requestHeaders = req.headers;
+
+  const referer = requestHeaders.get("referer");
+  const origin = requestHeaders.get("origin");
+
+  const isAllowedDomain =
+    referer?.startsWith(allowedDomain) || origin === allowedDomain;
+
+  if (!isAllowedDomain) {
+    console.error(`Request blocked. Unauthorized domain: ${referer || origin}`);
+    return NextResponse.json(
+      { error: "Access forbidden. Unauthorized domain." },
+      { status: 403 }
+    );
+  }
+
   if (protectedRoute(req)) {
-    const url = req.nextUrl;
     const username = url.searchParams.get("username");
     const email = url.searchParams.get("email");
 
@@ -23,6 +42,8 @@ export default clerkMiddleware((auth, req) => {
 
     auth().protect();
   }
+
+  return NextResponse.next(); 
 });
 
 export const config = {
