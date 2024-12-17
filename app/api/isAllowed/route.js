@@ -1,12 +1,15 @@
 
-const ALLOWED_REFERER = 'https://upm.cns365.ir/';
+import { cookies } from 'next/headers';
 
-export async function GET(request) {
-  const referer = request.headers.get('referer');
-  console.log({referer})
-  if (referer !== ALLOWED_REFERER) {
-    return new Response(JSON.stringify({ message: 'Access denied. Requests must come from a specific URI.' }), { status: 403 });
-  }
+export async function GET() {
+  const cookieStore = cookies();
+  
+  cookieStore.set('allowed-domain', 'https://upm.cns365.ir', {
+    httpOnly: true, 
+    secure: process.env.NODE_ENV === 'production', 
+    sameSite: 'strict',
+    path: '/',  
+  });
 
-  return new Response(JSON.stringify({ message: 'succuss' }), { status: 200 });
+  return new Response('Cookie set successfully');
 }

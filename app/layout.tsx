@@ -5,7 +5,7 @@ import 'react-datepicker/dist/react-datepicker.css'
 import { ClerkProvider } from '@clerk/nextjs'
 
 import type { Metadata } from "next";
-// import { headers } from 'next/headers';
+import { headers } from "next/headers";
 
 export const metadata: Metadata = {
   title: "Pishgaman UPM",
@@ -17,20 +17,25 @@ export const metadata: Metadata = {
 
 export default async function RootLayout({children} : {children : React.ReactNode}) {
 
-
-  // const requestHeaders = headers();
-  // const referer = requestHeaders.get('referer');
-  // let baseURL = '';
+  const requestHeaders = headers();
+  const referer = requestHeaders.get('referer');
+  let baseURL = '';
   
-  // if (referer) {
-  //   try {
-  //     const url = new URL(referer);
-  //     baseURL = `${url.protocol}//${url.host}`; // e.g., https://example.com
-  //   } catch (error) {
-  //     console.error('Invalid Referer URL:', referer);
-  //   }
-  // }
+  if (referer) {
+    try {
+      const url = new URL(referer);
+      baseURL = `${url.protocol}//${url.host}`; 
+    } catch (error) {
+      console.error('Invalid Referer URL:', referer);
+    }
+  }
 
+  if(referer == 'https://upm.cns365.ir'){
+    const sendReq = await fetch('/isAllowed')
+    const data = await sendReq.json()
+    console.log(data)
+  }
+  
   return (
     <ClerkProvider appearance={
         {
