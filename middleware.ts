@@ -16,18 +16,16 @@ export default clerkMiddleware((auth, req) => {
   const url = req.nextUrl;
   const requestHeaders = req.headers;
 
-  const referer = requestHeaders.get("referer");
-  const origin = requestHeaders.get("origin");
-
-  const isServerSideRequest = !requestHeaders.get("x-nextjs-data");
+  const originHeader = requestHeaders.get("origin");
+  const cookieAllowedDomain = req.cookies.get("allowed-domain")?.value;
 
   const isAllowedDomain =
-    referer?.startsWith(allowedDomain) ||
-    origin === allowedDomain ||
-    (isServerSideRequest && url.origin === allowedDomain);
+    originHeader === allowedDomain || cookieAllowedDomain === allowedDomain;
 
   if (!isAllowedDomain) {
-    console.error(`Request blocked. Unauthorized domain: ${referer || origin}`);
+    console.error(
+      `Access denied. Unauthorized domain. Origin: ${originHeader}, Cookie: ${cookieAllowedDomain}`
+    );
     return NextResponse.json(
       { error: "Access forbidden. Unauthorized domain." },
       { status: 403 }
